@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Leaderboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Global Leaderboard</h1>
+        <p>Submit your score and compete for the top spot!</p>
+
+        <form id="scoreForm">
+            <input type="text" id="username" placeholder="Username" required maxlength="20">
+            <input type="number" id="score" placeholder="Score" required min="0">
+            <button type="submit">Submit Score</button>
+        </form>
+
+        <div class="leaderboard-wrapper">
+            <table id="leaderboard">
+                <thead>
+                    <tr>
+                        <th class="rank-col">Rank</th>
+                        <th>User</th>
+                        <th class="score-col">Score</th>
+                        <th class="date-col">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Leaderboard entries will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
