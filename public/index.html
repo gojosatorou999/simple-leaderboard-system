@@ -11,13 +11,33 @@
         <h1>Global Leaderboard</h1>
         <p>Submit your score and compete for the top spot!</p>
 
+        <div class="global-stats">
+            <div class="stat-card">
+                <span class="stat-label">Total Players</span>
+                <span id="totalPlayers" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Peak Score</span>
+                <span id="peakScore" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Average</span>
+                <span id="avgScore" class="stat-value">0</span>
+            </div>
+        </div>
+
         <form id="scoreForm">
             <input type="text" id="username" placeholder="Username" required maxlength="20">
             <input type="number" id="score" placeholder="Score" required min="0">
             <button type="submit">Submit Score</button>
         </form>
 
+        <div class="search-container">
+            <input type="text" id="searchBar" placeholder="🔍 Search players...">
+        </div>
+
         <div class="leaderboard-wrapper">
+
             <table id="leaderboard">
                 <thead>
                     <tr>

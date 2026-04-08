@@ -139,3 +139,64 @@ tr:hover {
 .row-1 { background-color: rgba(245, 158, 11, 0.05); }
 .row-2 { background-color: rgba(156, 163, 175, 0.05); }
 .row-3 { background-color: rgba(180, 83, 9, 0.05); }
+
+/* Global Stats */
+.global-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+}
+
+.stat-card {
+    flex: 1;
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Search Bar */
+.search-container {
+    margin-bottom: 1.5rem;
+}
+
+#searchBar {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    border-radius: 2rem;
+    background: #f3f4f6;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+#searchBar:focus {
+    background: white;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+

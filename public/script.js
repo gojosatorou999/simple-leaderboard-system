@@ -3,32 +3,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const leaderboardBody = document.getElementById('leaderboardBody');
     const usernameInput = document.getElementById('username');
     const scoreInput = document.getElementById('score');
+    const searchBar = document.getElementById('searchBar');
+    
+    // Stats elements
+    const totalPlayersEl = document.getElementById('totalPlayers');
+    const peakScoreEl = document.getElementById('peakScore');
+    const avgScoreEl = document.getElementById('avgScore');
+
+    let allData = [];
 
     // Fetch and render the leaderboard
     const fetchLeaderboard = async () => {
         try {
             const response = await fetch('/api/leaderboard');
-            const data = await response.json();
-            renderLeaderboard(data);
+            allData = await response.json();
+            updateStats(allData);
+            renderLeaderboard(allData);
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
         }
+    };
+
+    // Update global statistics
+    const updateStats = (data) => {
+        if (data.length === 0) {
+            totalPlayersEl.textContent = '0';
+            peakScoreEl.textContent = '0';
+            avgScoreEl.textContent = '0';
+            return;
+        }
+
+        const total = data.length;
+        const peak = Math.max(...data.map(d => d.score));
+        const avg = Math.round(data.reduce((acc, curr) => acc + curr.score, 0) / total);
+
+        totalPlayersEl.textContent = total.toLocaleString();
+        peakScoreEl.textContent = peak.toLocaleString();
+        avgScoreEl.textContent = avg.toLocaleString();
     };
 
     // Render entries into the table
     const renderLeaderboard = (data) => {
         leaderboardBody.innerHTML = '';
         
-        if (data.length === 0) {
+        const searchTerm = searchBar.value.toLowerCase().trim();
+        const filteredData = data.filter(entry => 
+            entry.username.toLowerCase().includes(searchTerm)
+        );
+
+        if (filteredData.length === 0) {
             const emptyRow = document.createElement('tr');
-            emptyRow.innerHTML = `<td colspan="4" style="text-align: center; color: var(--text-secondary);">No scores yet. Be the first!</td>`;
+            emptyRow.innerHTML = `<td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 2rem;">No matching players found.</td>`;
             leaderboardBody.appendChild(emptyRow);
             return;
         }
 
-        data.forEach((entry, index) => {
+        filteredData.forEach((entry) => {
             const row = document.createElement('tr');
-            row.className = `row-${entry.rank}`;
+            row.className = `row-${entry.rank <= 3 ? entry.rank : 'default'}`;
             
             // Format date for readability
             const date = new Date(entry.date).toLocaleDateString('en-US', {
@@ -54,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Handle search input
+    searchBar.addEventListener('input', () => {
+        renderLeaderboard(allData);
+    });
+
     // Handle form submission
     scoreForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -62,6 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const score = parseInt(scoreInput.value);
 
         if (!username || isNaN(score)) return;
+
+        // Visual feedback
+        const btn = scoreForm.querySelector('button');
+        const originalText = btn.textContent;
+        btn.textContent = 'Submitting...';
+        btn.disabled = true;
 
         try {
             const response = await fetch('/api/scores', {
@@ -82,9 +125,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error submitting score:', error);
             alert('Could not submit score. Make sure the server is running.');
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
         }
     });
 
     // Initial load
     fetchLeaderboard();
+
+    // Auto-refresh every 30 seconds
+    setInterval(fetchLeaderboard, 30000);
 });
+
